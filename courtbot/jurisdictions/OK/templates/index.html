@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>Free Oklahoma Courtdate Notifications</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="friendly neighborhood court robot for getting court case information">
+    <meta name="author" content="Code for Tulsa">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+    <!-- Add additional CSS in static file -->
+
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+
+          <img class="img-responsive img-center" src="/static/images/logo-no-border.png" alt="Courtbot logo" style="width:150px;margin-right:10px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [Ohref="#about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#form">Get Case Reminder</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#faq">FAQ</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+
+<div class="jumbotron bright-yellow-bkg">
+  <div class="container text-center">
+    <h1 class="display-1">Get Court Date Reminders</h1>
+    <p class="display-2">Text your OSCN Case&nbsp;Number:</p>
+    <div class="row justify-content-center">
+      <div class="col-sm-6 display-3">Oklahoma <br /><a class="btn btn-lg btn-yellow" style="font-size:20px" href="sms:8443296801">(844) 329-6801‬</a></div>
+    </div>
+    <p class="Lead">
+      Also available on:
+    </p>
+    <div class="row justify-content-center app-links">
+      <div class="col-sm-4">
+        <a href="sms:8443296801"><i class="fas fa-sms fa-2x"></i></a>
+        <br><em>SMS Texting</em>
+      </div>
+      <div class="col-sm-4">
+        <a href="https://m.me/CourtBot-106405854094008" target="_blank"><i class="fab fa-facebook-messenger fa-2x" style=""></i></a>
+        <br><em>Facebook Messenger</em>
+      </div>
+        <div class="col-sm-4">
+        <a href="https://slack.com/oauth/authorize?client_id=3558251564.770803254950&scope=bot,chat:write:bot,team:read" target="_blank"><i class="fab fa-slack fa-2x" style=""></i></a>
+        <br><em>Slackbot</em>
+      </div>
+      <!-- <div class="col-sm-4 display-3">Rogers <br />County<br /><a class="btn btn-lg btn-yellow" style="font-size:20px" href="sms:9182059352">(918)-205-9352</a></div> -->
+      <!-- <div class="col-sm-4 display-3">Tulsa <br />County<br /><a class="btn btn-lg btn-yellow" style="font-size:20px" href="sms:9189923222">(918)-992-3222</a></div> -->
+    </div>
+
+
+
+  </div>
+</div>
+<!--What is CourtBot-->
+
+<div class="container text-center" id="whatIsCourtBot">
+  <main>
+    <h2>What is CourtBot?</h2>
+    <p class="lead">COURTBOT is a text-message app that helps keep everything on track. After cases are booked, clients can text their case number to COURTBOT to receive automatic reminders of court dates. Research shows that reminders work.</p>
+  </main>
+</div>
+
+<!--Why CourtBot-->
+<section id="about" class="CBLtBgClr">
+  <div class="container text-center" id="whyCourtBot">
+    <h2>Why CourtBot?</h2>
+    <article>
+
+      <br>
+      <h4>LESS BUREAUCRACY</h4>
+      <p class="lead">Around 25% of the people in Tulsa County Jail are waiting for their cases to be heard, costing taxpayers up to $25,000 per day. When clients attend their court cases, more small fines are collected, and jail space is freed for more
+        serious offenders. Remembering to attend court can help break the cycle of fines and jail time.
+      </p>
+    </article>
+    <br>
+    <article>
+      <h4>FEWER FINES</h4>
+      <p class="lead">Failure-to-appear and failure-to-pay fines can quickly snowball, especially for those living paycheck-to-paycheck. CourtBot helps clients avoid mistakes that burden them and the criminal justice system. Government done well can
+        help.</p>
+    </article>
+  </div>
+</section>
+<!-- Case Reminder Form -->
+<section id="form">
+  <div class="container text-center">
+
+    <h2>Fill Out Reminder Form:</h2>
+    <form action="/schedule_reminders" id="case-form" method="POST">
+      <div class="form-group">
+        <label for="case_num">Case Number <small>(ex: CF-1234-5678)</small></label>
+        <input type="text" class="form-control" id="case_num" name="case_num" placeholder="Enter case number" required>
+      </div>
+      <div class="form-group">
+        <label for="year">Year Filed</label>
+        <input type="number" class="form-control" id="year" name="year" min="2000" max="2100" placeholder="Enter year filed" required>
+      </div>
+      <div class="form-group">
+        <label for="county">County</label>
+        <input type="text" class="form-control" id="county" name="county" placeholder="Enter county" required>
+      </div>
+      <div class="form-group">
+        <label for="phone_num">Reminder Phone Number <small>(ex: 918-123-4567)</small></label>
+        <input type="tel" class="form-control" id="phone_num" name="phone_num" placeholder="Enter Phone Number"
+        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+      </div>
+      <div class="form-group">
+        <label for="add_phone_num">Additional Phone Number</label>
+        <input type="tel" class="form-control" id="add_phone_num" name="add_phone_num" placeholder="Enter Phone Number"
+        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+      </div>
+      <button id="add-case-btn" type="button" onclick="newCaseNumberGenerator()" class="btn btn-primary">Add Case Number</button>
+      <button  type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</section>
+<script>
+  let index = 1
+  let newCaseNumberGenerator = () => {
+
+    let addCaseNum = "add_case_num_" + index.toString()
+
+    let caseForm = document.getElementById('case-form')
+    let addCaseBtn = document.getElementById("add-case-btn")
+
+    let additionalCaseNumLabel = document.createElement("label");
+    additionalCaseNumLabel.setAttribute('for', addCaseNum);
+    additionalCaseNumLabel.innerHTML = "Additional Case Number " + index.toString() ;
+
+    let additionalCaseNumSmall = document.createElement("small");
+    additionalCaseNumSmall.innerHTML = "(ex: CF-1234-5678)" ;
+    additionalCaseNumLabel.appendChild(additionalCaseNumSmall)
+
+    let additionalCaseNumField = document.createElement("input");
+    additionalCaseNumField.setAttribute('type',"text");
+    additionalCaseNumField.setAttribute('name', addCaseNum);
+    additionalCaseNumField.setAttribute('id', addCaseNum);
+    additionalCaseNumField.setAttribute('class', "form-control");
+    additionalCaseNumField.setAttribute('placeholder', "Enter case number");
+
+    let additionalCaseNumDiv = document.createElement("div");
+    additionalCaseNumDiv.setAttribute('class',"form-group");
+    additionalCaseNumDiv.appendChild(additionalCaseNumLabel)
+    additionalCaseNumDiv.appendChild(additionalCaseNumField)
+
+    index += 1
+    caseForm.insertBefore(additionalCaseNumDiv, addCaseBtn)
+  }
+</script>
+<!--FAQs-->
+<section id="faq" class="CBLtBgClr">
+  <div class="container">
+    <h2 class="center">Frequently Asked Questions</h2>
+    <br>
+    <div class="row">
+      <div class="col-sm-6">
+        <h4>1. How do I know my OSCN Case Number?</h4>
+        <p>It starts with CF, CM, CRF or CRM and has two dashes.</p>
+      </div>
+      <div class="col-sm-6">
+        <h4>2. What if I still can't find my case number?</h4>
+        <p>Check with your public defender or search your name online at <a href="https://www.oscn.net/dockets/search.aspx">www.oscn.net/dockets/search.aspx </a>
+        </p>
+      </div>
+
+      <div class="col-sm-6">
+            <h4>3. Can other people be reminded of my court date?</h4>
+            <p>Anyone with your case number will be able to use courtbot to keep track of your court date.</p>
+      </div>
+      <div class="col-sm-6">
+        <h4>4. How will my information be used?</h4>
+        <p>Your case information will be pulled into Courtbot's database to be used as a reference for your reminders</p>
+      </div>
+      <div class="col-sm-6">
+        <h4>5. When will I be reminded of my court case?</h4>
+        <p>Currently, a notification will be sent the day before you case.</p>
+      </div>
+      <div class="col-sm-6">
+        <h4>6. How often will I be reminded?</h4>
+        <p>Currently, you will only be reminded once.</p>
+      </div>
+      <div class="col-sm-6">
+        <h4>7. How do I unsubscribe?</h4>
+        <p></p>
+      </div>
+      <div class="col-sm-6">
+        <h4>8. How do I contact the people behind CourtBot?</h4>
+        <p>You can contact us at <a href="mailto:courtbotmuskogee@gmail.com">courtbotmuskogee@gmail.com.</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+<!--Credits-->
+<section>
+  <div id="sponsor-logo" class="container text-center ">
+    <h3>Brought to you by</h3>
+    <br>
+
+    <img class="img-responsive img-center col-sm-8" src="/static/images/cft.png" alt="Code for Tulsa Logo">
+    <img class="img-responsive img-center col-sm-8" src="/static/images/brigade.png" alt="Code for America Logo">
+    <img class="img-responsive img-center col-sm-8" src="/static/images/cfm.png" alt="Code for Muskogee">
+  </div>
+</section>
+<!--Footer-->
+
+
+
+    <footer class="container-fluid text-center py-4" id="footer">
+      <p class="">&copy; 2021 <a target="_blank" href="https://www.codeforamerica.org/">Code for America</a>. This project is licensed under the Code for America <a href="https://github.com/codeforamerica/courtbot/blob/master/LICENSE">ISC license</a>. </p>
+      <div class="row justify-content-center">
+        <div class="col-sm-12">
+          <a class="mx-1" target="_blank" href="https://github.com/codefortulsa/courtbot-python">
+            <i class="fab fa-github fa-lg"></i>
+          </a>
+          <a class="mx-1" target="_blank" href="https://www.facebook.com/CourtBot-106405854094008/">
+            <i class="fab fa-facebook fa-lg"></i>
+          </a>
+          <a class="mx-1" href="https://m.me/CourtBot-106405854094008" target="_blank"><i class="fab fa-facebook-messenger fa-lg" style=""></i></a>
+          <a class="mx-1" href="https://slack.com/oauth/authorize?client_id=3558251564.770803254950&scope=bot,chat:write:bot,team:read" target="_blank"><i class="fab fa-slack-hash fa-lg" style=""></i></a>
+          <a class="mx-1" href="mailto:courtbotmuskogee@gmail.com" target="_blank"><i class="far fa-envelope fa-lg" style=""></i></a>
+        </div>
+      </div>
+    </footer>
+    <script src="https://kit.fontawesome.com/4082aee318.js" crossorigin="anonymous"></script>
+  </body>
+
+</html>

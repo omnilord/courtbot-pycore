@@ -1,0 +1,10 @@
+**.sw*
+**/tmp
+**/logs/**.log
+**/logs/**/
+**/__pycache__
+**/*.egg-info
+/build
+/dist
+/.data
+**/temp
