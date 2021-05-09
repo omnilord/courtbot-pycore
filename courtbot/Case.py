@@ -1,5 +1,6 @@
 class Case():
     """Some sort of generalized object that will be constructed identically for every state"""
+
     def __init__(self, *, case_id, when, what, cellphone, origination=None):
         self.case_id = case_id
         self.when = when
@@ -9,5 +10,8 @@ class Case():
 
 
     def save(db):
-        db.execute('INSERT INTO reminders (...) VALUES (...)', ...)
-        return db.commit() # some sort of "true" / "false" value to confirm persistence?
+        # TODO: this is a placeholder
+        if db:
+            db.execute('INSERT INTO reminders (...) VALUES (...)', ...)
+            return db.commit() # some sort of "true" / "false" value to confirm persistence?
+        return None

@@ -95,5 +95,5 @@ def get_state(state_code):
     if not is_state_configured(state_code):
         return None
 
-    import_module(f'.states.{state_code}', package=__package__)
+    import_module(f'.{state_code}', package=__package__)
     return StateCourtBot(state_code)

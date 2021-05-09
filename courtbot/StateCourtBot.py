@@ -1,20 +1,19 @@
 class StateCourtBot():
-    def __init__(state):
+    def __init__(self, state):
         self.state = state
+        self.templates = None
         self.get_case = None
         self.register_reminder = None
         self.required_fields = None
 
 
-    def get_case_callback(self):
+    def get_case_callback(self, fn):
         """
         Decorator for attaching the method to get a case from the state's docket
         """
 
-        def wrapper(fn):
-            self.get_case = fn
-            return fn
-        return wrapper
+        self.get_case = fn
+        return fn
 
 
     def register_callback(self, **required_fields):
@@ -31,7 +30,7 @@ class StateCourtBot():
         return wrapper
 
 
-    def render_page_callback(self):
+    def render_page_callback(self, fn):
         """
         Decorator for attaching an optional custom template/renderer for the opt-in page?
 
@@ -43,7 +42,7 @@ class StateCourtBot():
         pass
 
 
-    def validate_input_callback(self):
+    def validate_input_callback(self, fn):
         """
         Decorator for attaching an optional custom validation?
         """
@@ -51,7 +50,19 @@ class StateCourtBot():
         pass
 
 
-    def receive_registry(self, raw_params):
+    def render_lookup_page(self, app, error=None):
+        return 'test lookup'
+
+
+    def render_case_info_page(self, app, case):
+        return 'test case'
+
+
+    def render_optin_page(self, app, case, error=None):
+        return 'test optin'
+
+
+    def register_optin(self, raw_params):
         """
         This is the callback from the raw request sending in
         the ultimate opt-in for a text reminder for the court date.
@@ -78,4 +89,8 @@ class StateCourtBot():
                 raise ArgumentError(f'Invalid value provided for {k}')
             params[k] = raw_params[k]
 
-        case = self.register_reminder(**params)
+        return self.register_reminder(**params)
+
+
+    def new_case(self, **kwargs):
+        return courtbot.CourtBotCase(**kwargs)

@@ -13,20 +13,20 @@ state_courtbot = courtbot.get_state('DE')
 
 
 @state_courtbot.get_case_callback
-def delaware_get_case(case_id):
+def delaware_get_case(self, case_id):
     try:
         return dsccs.fetch_case(case_id)
-    except dsccs.CourtConnectParseException => ex:
+    except dsccs.CourtConnectParseException as ex:
         raise courtbot.ParseException(ex.get_message())
 
 
 @state_courtbot.register_callback(**REQUIRED_FIELDS)
-def delaware_register_reminder(*, case_id, cellnumber):
+def delaware_register_reminder(self, *, case_id, cellnumber):
     case = delaware_get_case(case_id)
     when = case.schedule[0].datetime
 
     # return the data required for courtbot transmission
-    return courtbot.CourtBotCase(
+    return self.new_case(
         case_id=case.id,
         when=when - datetimedelta(day=-1),
         what=REMINDER_MESSAGE.format(case_id=case.id, location=case.location, judge=case.judge),
