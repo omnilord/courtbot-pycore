@@ -11,6 +11,9 @@ app = Flask('CourtBot', template_folder=tpdir)
 def index():
     return render_template('index.html', states=get_states())
 
+@app.route('/favicon.ico')
+def favicon():
+    return None
 
 # step 2, look up your case
 @app.route('/<string:state_code>', methods=['GET', 'POST'])
@@ -23,6 +26,7 @@ def state_index(state_code):
             return statebot.render_case_info_page(app, case)
         except CourtBotException as err:
             error = err
+    print(state_code, statebot)
     return statebot.render_lookup_page(app, error=error)
 
 

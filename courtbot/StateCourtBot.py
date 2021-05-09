@@ -1,10 +1,32 @@
+import jinja2, functools, os
+from flask import render_template
+
+def template_renderer(func):
+    @functools.wraps(func)
+    def renderer_wrapper(self, app, *args, **kwargs):
+        if self.template_loader:
+            default_loader = app.jinja_loader
+            app.jinja_loader = jinja2.ChoiceLoader([
+                self.template_loader,
+                app.jinja_loader,
+            ])
+            r = func(self, *args, **kwargs)
+            app.jinja_loader = default_loader
+            return r
+        return func(self, *args, **kwargs)
+    return renderer_wrapper
+
+
 class StateCourtBot():
-    def __init__(self, state):
-        self.state = state
-        self.templates = None
+    def __init__(self, state_code):
+        self.state_code = state_code
         self.get_case = None
         self.register_reminder = None
         self.required_fields = None
+        self.template_loader = None
+        path = os.path.join(os.path.dirname(__file__), 'jurisdictions', state_code, 'templates')
+        if os.path.isdir(path):
+            self.template_loader = jinja2.FileSystemLoader(path)
 
 
     def get_case_callback(self, fn):
@@ -30,16 +52,8 @@ class StateCourtBot():
         return wrapper
 
 
-    def render_page_callback(self, fn):
-        """
-        Decorator for attaching an optional custom template/renderer for the opt-in page?
-
-        This would allow states with multiple court jurisditions that do not have a unified
-        record system to provide custom UI that may include JavaScript to dynamically adapt
-        the form as court information is drilled down.
-        """
-
-        pass
+    def new_case(self, **kwargs):
+        return courtbot.CourtBotCase(**kwargs)
 
 
     def validate_input_callback(self, fn):
@@ -49,16 +63,18 @@ class StateCourtBot():
 
         pass
 
+    @template_renderer
+    def render_lookup_page(self, error=None):
+        return render_template('state.html')
 
-    def render_lookup_page(self, app, error=None):
-        return 'test lookup'
 
-
-    def render_case_info_page(self, app, case):
+    @template_renderer
+    def render_case_info_page(self, case):
         return 'test case'
 
 
-    def render_optin_page(self, app, case, error=None):
+    @template_renderer
+    def render_optin_page(self, case, error=None):
         return 'test optin'
 
 
@@ -90,7 +106,3 @@ class StateCourtBot():
             params[k] = raw_params[k]
 
         return self.register_reminder(**params)
-
-
-    def new_case(self, **kwargs):
-        return courtbot.CourtBotCase(**kwargs)
