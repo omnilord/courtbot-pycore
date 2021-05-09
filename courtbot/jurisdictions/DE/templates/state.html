@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Courtbot Delaware - Court Date Reminders Texted to Your Phone</title>
+<link rel="icon" href="data:,">
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -115,11 +116,11 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="case_num">Case Number <small>(ex: JP13-20-567890)</small></label>
-                  <input type="text" class="form-control" id="case_num" name="case_num" placeholder="JP13-20-567890" required="" value="JP13-">
+                  <input type="text" class="form-control" id="case_num" name="case_num" placeholder="JP13-20-567890" pattern="JP13-\d{2}-\d{6}" required="" value="JP13-">
                 </div>
                 <div class="form-group">
                   <label for="phone_num">Reminder Phone Number <small>(ex: 302-555-0123)</small></label>
-                  <input type="tel" class="form-control" id="phone_num" name="phone_num" placeholder="Enter Phone Number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required="">
+                  <input type="text" class="form-control" id="phone_num" name="phone_num" title="US formatted cellular number" placeholder="Enter Phone Number" pattern="^(\+?1-?)?\s*\(?\s*[0-9]{3}\s*\)?\s*-?\s*[0-9]{3}\s*-?\s*[0-9]{4}\s*$" minlength="10" maxlength="17" required="">
                 </div>
                 <div class="form-group">
                   <small>Opt-in terms: by opting in you acknowledge and accept that you will receive 2 to 4 texts in the week prior to your court date and will be responsible for any charges generated.  Additional texts may be received if the court changes the scheduling on your case.</small>

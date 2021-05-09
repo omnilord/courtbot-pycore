@@ -4,15 +4,21 @@ from flask import render_template
 def template_renderer(func):
     @functools.wraps(func)
     def renderer_wrapper(self, app, *args, **kwargs):
+        # HACK: This is the only way I found that jinja won't cache
+        #       the templates across jurisdictions
+        app.jinja_env.cache = {}
+
         if self.template_loader:
             default_loader = app.jinja_loader
+
             app.jinja_loader = jinja2.ChoiceLoader([
                 self.template_loader,
                 app.jinja_loader,
             ])
-            r = func(self, *args, **kwargs)
+            rendered = func(self, *args, **kwargs)
+
             app.jinja_loader = default_loader
-            return r
+            return rendered
         return func(self, *args, **kwargs)
     return renderer_wrapper
 
@@ -63,20 +69,6 @@ class StateCourtBot():
 
         pass
 
-    @template_renderer
-    def render_lookup_page(self, error=None):
-        return render_template('state.html')
-
-
-    @template_renderer
-    def render_case_info_page(self, case):
-        return 'test case'
-
-
-    @template_renderer
-    def render_optin_page(self, case, error=None):
-        return 'test optin'
-
 
     def register_optin(self, raw_params):
         """
@@ -106,3 +98,18 @@ class StateCourtBot():
             params[k] = raw_params[k]
 
         return self.register_reminder(**params)
+
+
+    @template_renderer
+    def render_lookup_page(self, error=None):
+        return render_template('state.html')
+
+
+    @template_renderer
+    def render_case_info_page(self, case, error=None):
+        return render_template('case.html', case=case, error=error)
+
+
+    @template_renderer
+    def render_optin_page(self, case, error=None):
+        return render_template('optin.html', case=case, error=error)
