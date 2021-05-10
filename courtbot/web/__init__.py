@@ -17,6 +17,7 @@ def index():
 
 @app.route('/favicon.ico')
 def favicon():
+    # TODO: get a favicon
     return None
 
 # step 2, GET: render case lookup

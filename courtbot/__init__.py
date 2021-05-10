@@ -5,9 +5,10 @@ class CourtBotException(Exception):
 def valid_cellphone(text):
     _text = re.sub('[^\d]', '', text)
     l = len(_text)
-    if l < 9 or l > 10 or (l == 10 and _text[0] != '1'):
+    if l < 10 or l > 11 or (l == 11 and _text[0] != '1'):
         raise ArgumentError('Invalid Cell Phone Number Provided.')
     return _text
+
 
 from .StateCourtBot import StateCourtBot
 from .Case import Case
