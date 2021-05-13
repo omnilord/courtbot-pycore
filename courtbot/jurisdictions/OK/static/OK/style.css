@@ -1,0 +1,198 @@
+body {
+	font-family: 'Montserrat', sans-serif;
+	color: #302f09;
+	font-size: 16px;
+}
+
+.center {
+	text-align: center;
+}
+
+strong, .dark {
+	color: #484623;
+}
+
+.jumbotron .btn {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.btn-yellow {
+	color: #2c2b05;
+	background-color: #ffe052;
+}
+
+.btn-gold {
+	color: #fcfbe3;
+	background-color: #766b22;
+}
+
+section, footer {
+	padding: 60px 0;
+}
+
+.navbar {
+	border-bottom: 2px solid black;
+}
+
+.bright-yellow-bkg {
+	background-color: #fcfbe3;
+	border-top: 10px solid #ffe052;
+	border-bottom: 10px solid #ffe052;
+	color: #2c2b05;
+}
+
+.display-1, h1 {
+	font-size: 32px;
+	font-weight: lighter;
+}
+
+.display-2, h2 {
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.display-3, h3 {
+	font-size: 24px;
+	font-weight: lighter;
+}
+
+h4, .display-4 {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.display-4 {
+	font-weight: lighter;
+}
+
+.lead {
+	max-width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 1em;
+}
+
+.CBLtBgClr {
+	background-color: #F6F3DD;
+}
+
+.CBLtBgClr {
+	background-color: #F6F3DD;
+}
+
+p {
+	padding-bottom: 15px;
+}
+
+.facebook {
+	font-size: 5em;
+	color: #3B5998;
+}
+
+#sponsor-logo img {
+	max-width: 200px;
+	width: 100%;
+	margin-bottom: 1em;
+	padding: 0.5em 0;
+}
+
+.app-links {
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+.app-links .col-sm-4 {
+	margin-bottom: 2em;
+}
+
+.app-links a {
+	background-color: #ffe052;
+	padding: 0.5em;
+	border-radius: 5px;
+	color: #000000;
+	display: inline-block;
+}
+
+.app-links a:hover {
+	background-color: #DFC23B;
+}
+
+.app-links em {
+	font-size: 0.9em;
+}
+
+footer {
+	color: #999;
+	background: #EEE;
+}
+
+footer a {
+	color: #555;
+}
+footer a:hover {
+	color: #333;
+}
+
+#case-form {
+	max-width: 500px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.form-group {
+	position: relative;
+}
+
+label {
+	float: left;
+	margin-left: 20px;
+}
+
+/* Tablet Breakpoint */
+@media all and (min-width: 768px) {
+	.display-1, h1 {
+		font-size: 56px;
+	}
+
+	.display-2, h2 {
+		font-size: 42px;
+	}
+
+	.display-3, h3 {
+		font-size: 36px;
+	}
+
+	h4 {
+		font-size: 20px;
+	}
+}
+
+/* Desktop Breakpoint */
+@media all and (min-width: 768px) {
+	.display-1, h1 {
+		font-size: 72px;
+	}
+
+	.display-2, h2 {
+		font-size: 42px;
+	}
+
+	.display-3, h3 {
+		font-size: 32px;
+	}
+
+	h4, .display-4 {
+		font-size: 24px;
+	}
+}
+
+@media(min-width: 1030px) {
+	.jumbotron .col-sm-4.display-3 br {
+		display: none;
+	}
+}

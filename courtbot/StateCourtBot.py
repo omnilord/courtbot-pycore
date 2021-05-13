@@ -31,9 +31,8 @@ def build_optin_form(L):
 
 
 def setup_blueprint(state_code):
-    t_path = os.path.join(os.path.dirname(__file__), 'jurisdictions', state_code, 'templates')
-    s_path = os.path.join(os.path.dirname(__file__), 'jurisdictions', state_code, 'static')
-    return Blueprint(state_code, __name__, template_folder=t_path, static_folder=s_path)
+    name = f'courtbot.jurisdictions.{state_code}'
+    return Blueprint(state_code, name, template_folder='templates', static_folder='static')
 
 
 class StateCourtBot():
