@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, request
-from .. import CourtBotException, get_states, get_state
+from .. import CourtBotException, CourtBotMisconfigured, CourtBotUnknownState, get_states, get_state
 
 tpdir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'templates')
 app = Flask('CourtBot', template_folder=tpdir)
@@ -15,41 +15,49 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 def index():
     return render_template('index.html', states=get_states())
 
+
 @app.route('/favicon.ico')
 def favicon():
     # TODO: get a favicon
-    return None
+    return 'data:,'
+
 
 # step 2, GET: render case lookup
 # step 3, POST: render case and confirm opt-in on case
 @app.route('/<string:state_code>', methods=['GET', 'POST'])
 def state_index(state_code):
-    statebot = get_state(state_code.upper())
+    statebot = get_state(app, state_code.upper())
+    form = statebot.lookup_form(request.form)
     error = None
-    if request.method == 'POST':
-        try:
-            case = statebot.fetch_valid_case(request.form)
-            return statebot.render_case_info_page(app, case)
-        except CourtBotException as err:
-            error = err
-    return statebot.render_lookup_page(app, error=error)
+    try:
+        if request.method == 'POST' and form.validate():
+            case = statebot.fetch_valid_case(form)
+            return statebot.render_case_info_page(case, form)
+    except CourtBotException as err:
+        error = err
+    return statebot.render_lookup_page(form, error=error)
 
 
 # step 4, POST: send confirmation that your phone has been added
 @app.route('/<string:state_code>/optin', methods=['POST'])
 def state_optin(state_code):
-    # TODO: create a record in the 'reminders' table
-    statebot = get_state(state_code.upper())
+    statebot = get_state(app, state_code.upper())
+    form = statebot.optin_form(request.form)
     error = None
     try:
-        optin = statebot.register_optin(request.form)
-        return statebot.render_optin_page(app, optin)
+        if request.method == 'POST' and form.validate():
+            case = statebot.register_optin(form)
+            return statebot.render_confirmed_page(case)
     except CourtBotException as err:
         error = err
-    return statebot.render_confirmation_page(app, error=error)
+    return statebot.render_optin_page(error=error)
 
 
-# step 5, TODO: catch errors?
-# @app.errorhandler(???)
-# def default_error_handler(error):
-#     pass
+@app.errorhandler(CourtBotMisconfigured)
+def default_error_handler(error):
+    return f"An error occurred. 😱<br/>{error.state_name} is misconfigured."
+
+
+@app.errorhandler(CourtBotUnknownState)
+def default_error_handler(error):
+    return f"An error occurred. 😱<br/>{error.state_name} is not a configured state."

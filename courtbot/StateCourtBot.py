@@ -1,38 +1,74 @@
-import jinja2, functools, os
-from flask import render_template
+import jinja2, functools, os, re
+from flask import Blueprint, render_template
+from wtforms import Form, StringField, SelectField, validators, ValidationError
 
-def template_renderer(func):
-    @functools.wraps(func)
-    def renderer_wrapper(self, app, *args, **kwargs):
-        # HACK: This is the only way I found that jinja won't cache
-        #       the templates across jurisdictions
-        app.jinja_env.cache = {}
 
-        if self.template_loader:
-            default_loader = app.jinja_loader
+def validate_cellphone(form, text):
+    _text = re.sub('[^\d]', '', text)
+    l = len(_text)
+    if l < 10 or l > 11 or (l == 11 and _text[0] != '1'):
+        raise ValidationError('Invalid Cell Phone Number Provided.')
+    return _text
 
-            app.jinja_loader = jinja2.ChoiceLoader([
-                self.template_loader,
-                app.jinja_loader,
-            ])
-            rendered = func(self, *args, **kwargs)
 
-            app.jinja_loader = default_loader
-            return rendered
-        return func(self, *args, **kwargs)
-    return renderer_wrapper
+def build_lookup_form(fields):
+    class L(Form): pass
+    for name, options in fields.items():
+        title, validation = options
+        if isinstance(validation, list):
+            setattr(L, name, SelectField(title, choices=validation))
+        # elif TODO: isinstance validation, any validators.* classes
+        #    setattr(L, name, StringField(title, [validation]))
+        else:
+            setattr(L, name, StringField(title, [validators.InputRequired(), validators.Regexp(validation)]))
+    return L
+
+
+def build_optin_form(L):
+    class O(L): pass
+    O.cellphone = StringField('Cell Phone Number', [validate_cellphone])
+    return O
+
+
+def setup_blueprint(state_code):
+    t_path = os.path.join(os.path.dirname(__file__), 'jurisdictions', state_code, 'templates')
+    s_path = os.path.join(os.path.dirname(__file__), 'jurisdictions', state_code, 'static')
+    return Blueprint(state_code, __name__, template_folder=t_path, static_folder=s_path)
 
 
 class StateCourtBot():
-    def __init__(self, state_code):
+    """
+    StateCourtBot is the main workhorse interfacing functionality from each
+    state's unique court case lookup to a normalized structure so one common
+    tool can be used to provide text messages to case participants.
+    """
+
+    def __init__(self, state_code, state_name, fields):
         self.state_code = state_code
+        self.state_name = state_name
         self.get_case = None
         self.register_reminder = None
-        self.required_fields = None
-        self.template_loader = None
-        path = os.path.join(os.path.dirname(__file__), 'jurisdictions', state_code, 'templates')
-        if os.path.isdir(path):
-            self.template_loader = jinja2.FileSystemLoader(path)
+        self.blueprint = setup_blueprint(state_code)
+        self.set_required_fields(fields)
+
+
+    def set_required_fields(self, fields):
+        """
+        Add the required fields and build the HTML WTForms used in the
+        templating engine.
+
+        fields should be a Dict, where the key is the field name and the value
+        is a tuple consisting of ('title text', validation) where validation is
+        either a singular regex or a list roif ('key', 'value') tuples used for a
+        select tag's options.
+        """
+
+        if not fields or set(fields.keys()) == set(['cellphone']):  # if empty
+            raise ArgumentError('A minimum of one field is a required to identify cases.  Cellphone is handled automatically.')
+
+        self.required_fields = fields
+        self.lookup_form = build_lookup_form(fields)
+        self.optin_form = build_optin_form(self.lookup_form)
 
 
     def get_case_callback(self, fn):
@@ -44,72 +80,47 @@ class StateCourtBot():
         return fn
 
 
-    def register_callback(self, **required_fields):
+    def registration_callback(self, fn):
         """
         Decorator for registering a cell phone against a specific case.
         """
 
-        def wrapper(fn):
-            if not required_fields:  # if empty
-                raise ArgumentError('A minimum of one field is a required to identify cases.')
-            self.required_fields = required_fields
-            self.register_reminder = fn
-            return fn
-        return wrapper
+        self.register_reminder = fn
+        return fn
 
 
-    def new_case(self, **kwargs):
-        return courtbot.CourtBotCase(**kwargs)
-
-
-    def validate_input_callback(self, fn):
-        """
-        Decorator for attaching an optional custom validation?
-        """
-
-        pass
-
-
-    def register_optin(self, raw_params):
+    def register_optin(self, form):
         """
         This is the callback from the raw request sending in
         the ultimate opt-in for a text reminder for the court date.
         """
 
-        if self.register_reminder is None:
-            raise CourtBotException('register_reminder attempted without registering a reminder callback.')
-
-        params = {}
-        if 'cellphone' in raw_params.keys():
-            if not CELLPHONE_REGEX.match(raw_params['cellphone']):
-                raise ArgumentError(f'Invalid cell phone number provided.')
-            params['cellphone'] = raw_params['cellphone']
-        else:
-            raise ArgumentError(f'No cell phone number provided.')
-
-        for k, v in self.required_fields.items():
-            if k not in raw_params.keys():
-                raise ArgumentError(f'{k} is a required field')
-            if callable(v):
-                if not v(raw_params[k]):
-                    raise ArgumentError(f'Invalid value provided for {k}')
-            elif not v.match(raw_params[k]):
-                raise ArgumentError(f'Invalid value provided for {k}')
-            params[k] = raw_params[k]
-
-        return self.register_reminder(**params)
+        pass
 
 
-    @template_renderer
-    def render_lookup_page(self, error=None):
-        return render_template('state.html')
+    def new_case(self, **kwargs):
+        """
+        Indirect for construction of a CourtBotCase instance
+        """
+
+        return courtbot.CourtBotCase(**kwargs)
 
 
-    @template_renderer
-    def render_case_info_page(self, case, error=None):
-        return render_template('case.html', case=case, error=error)
+    def render_lookup_page(self, form, lang='en', error=None):
+        return render_template(f'{self.state_code}/state.{lang}.html', statebot=self,
+                form=form, error=error)
 
 
-    @template_renderer
-    def render_optin_page(self, case, error=None):
-        return render_template('optin.html', case=case, error=error)
+    def render_case_info_page(self, case, form, lang='en', error=None):
+        return render_template(f'{self.state_code}/case.{lang}.html', statebot=self,
+                case=case, form=form, error=error)
+
+
+    def render_optin_page(self, case, form, lang='en', error=None):
+        return render_template(f'{self.state_code}/optin.{lang}.html', statebot=self,
+                case=case, form=form, error=error)
+
+
+    def render_confirmed_page(self, case, lang='en', error=None):
+        return render_template(f'{self.state_code}/confirmed.{lang}.html', statebot=self,
+                case=case, error=error)

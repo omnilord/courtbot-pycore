@@ -4,24 +4,24 @@ import dsccs  # Delaware State Court Connect Scraper / Pending
 
 
 REQUIRED_FIELDS = {
-    'case_id': re.compile('^(?P<court>w+)-(?P<year>\d{2})-(?P<case>\d+)$'),
+    'case_id': ('Case Number', re.compile('^(?P<court>w+)-(?P<year>\d{2})-(?P<case>\d+)$')),
+    # cellphone is automatically included
 }
 REMINDER_MESSAGE = '''Hello!  You're hearing is tomorrow at {when} and will be held at {location}; {judge} presiding.  Please remember to bring your id, and arrive early.'''
 
 
-state_courtbot = courtbot.get_state('DE')
+bot = courtbot.state('DE', REQUIRED_FIELDS)
 
-
-@state_courtbot.get_case_callback
+@bot.get_case_callback
 def delaware_get_case(self, case_id):
     try:
         return dsccs.fetch_case(case_id)
     except dsccs.CourtConnectParseException as ex:
-        raise courtbot.ParseException(ex.get_message())
+        raise courtbot.CourtBotException(ex.get_message())
 
 
-@state_courtbot.register_callback(**REQUIRED_FIELDS)
-def delaware_register_reminder(self, *, case_id, cellnumber):
+@bot.registration_callback
+def delaware_registration_reminder(self, *, case_id, cellnumber):
     case = delaware_get_case(case_id)
     when = case.schedule[0].datetime
 

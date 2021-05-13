@@ -1,5 +1,49 @@
 {% extends "layout.html" %}
-{% block title %} - {{state_name}}{% endblock %}
+{% block title %}{{statebot.state_name}}{% endblock %}
+{% block navStateCode %}{{statebot.state_code}}{% endblock %}
 {% block content %}
-<h2>TODO common state-based form here</h2>
+<h2>{{statebot.state_name}} Case Lookup</h2>
+<div class="jumbotron main-bkg">
+  <div class="container text-center">
+    <div class="row align-items-center">
+      <div class="col-sm-3">
+        <img src="http://court.bot/static/images/logo-no-border.png" alt="CourtBotLogo" id="courtbotlogo" class="align-self-center" />
+      </div>
+      <div class="col-sm-6">
+        <h1 class="display-5">Get Court Date Reminders</h1>
+          <h2 class="lead">Text your Case Number:</h2>
+          <div class="row justify-content-center">
+            <div class="col-sm-6 display-3"><a class="btn btn-lg btn-yellow" style="font-size:20px" href="#">(302) 555-0123</a></div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="header-img-borders row justify-content-center align-self-center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c6/Flag_of_Delaware.svg" alt="Delaware State Flag" id="stateflag" />
+          </div>
+        </div>
+      </div>
+      <p class="my-sm-3">
+        Also available on:
+      </p>
+      <div class="row justify-content-center app-links">
+        <div class="col-sm-4">
+          <a href="#"><i class="fa fa-commenting fa-2x" aria-hidden="true"></i></a>
+          <br><em>SMS Texting</em>
+        </div>
+        <div class="col-sm-4">
+          <a href="#" target="_blank"><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i></a>
+          <br><em>Facebook Messenger</em>
+        </div>
+          <div class="col-sm-4">
+          <a href="#" target="_blank"><i class="fa fa-slack fa-2x" aria-hidden="true"></i></a>
+          <br><em>Slackbot</em>
+        </div>
+      </div>
+      <p class="my-sm-3">
+        Or fill out this form:
+      </p>
+{{ macros.build_form(statebot.state_code, form) }}
+    </div>
+  </div>
+</div>
 {% endblock %}

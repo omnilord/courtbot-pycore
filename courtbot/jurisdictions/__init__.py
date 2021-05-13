@@ -1,7 +1,8 @@
 import os
 from functools import cache
 from importlib import import_module
-from .. import StateCourtBot
+from .. import StateCourtBot, CourtBotUnknownState
+
 
 STATES = {
     'AL': 'Alabama',
@@ -86,14 +87,22 @@ def get_states():
 
 
 @cache
-def get_state(state_code):
+def get_state(app, state_code):
     """
     A utility function that fetches a state's package from cache or the
     'jurisdictions' directory, assuming it exists.
     """
 
     if not is_state_configured(state_code):
-        return None
+        error = CourtBotUnknownState(f'{state_code} is an unknown state code.')
+        error.state_code = state_code
+        error.state_name = 'unknown'
+        raise error
 
-    import_module(f'.{state_code}', package=__package__)
-    return StateCourtBot(state_code)
+    bot = import_module(f'.{state_code}', package=__package__).bot
+    app.register_blueprint(bot.blueprint, url_prefix=f'/{state_code}')
+    return bot
+
+
+def state(state_code, fields):
+    return StateCourtBot(state_code, STATES[state_code], fields)

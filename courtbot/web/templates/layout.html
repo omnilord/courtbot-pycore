@@ -1,7 +1,8 @@
+{% import 'macros.html' as macros %}
 <!doctype html>
 <html>
   <head>
-    <title>CourtBot{% block title %}{% endblock %}</title>
+    <title>CourtBot - {% block title %}Court Date Reminders{% endblock %}</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -9,12 +10,45 @@
     {% block head %}{% endblock %}
   </head>
   <body>
-    <div id="content">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          CourtBot {% block navStateCode %}{% endblock %}
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#faq">FAQ</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section id="content">
 {% block content %}{% endblock %}
-    </div>
+    </section>
+
+    <section id="about">
+{% block about %}{% endblock %}
+    </section>
+
+    <section id="faq">
+{% block faq %}{% endblock %}
+    </section>
+
     <div id="footer">
       &copy; Copyright 2021 by <a href="mailto:etruitte@privateerconsulting.com">Eric L. Truitte, MBA</a>, 
-      <a href="https://www.opendatadelaware.com/">Open Data Delaware</a>. 
+      {% block copyright %}{% endblock %}
       <a href="https://github.com/omnilord/courtbot-pycore">This site is open source.</a>
     </div>
   </body>
