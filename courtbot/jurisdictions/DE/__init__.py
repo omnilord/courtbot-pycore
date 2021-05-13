@@ -12,6 +12,7 @@ REMINDER_MESSAGE = '''Hello!  You're hearing is tomorrow at {when} and will be h
 
 bot = courtbot.state('DE', REQUIRED_FIELDS)
 
+
 @bot.get_case_callback
 def delaware_get_case(self, case_id):
     try:
