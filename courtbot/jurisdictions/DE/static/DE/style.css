@@ -1,0 +1,28 @@
+.main-bkg {
+  background-color: rgb(118, 161, 160);
+  border-top: 10px solid rgb(240,220,130);
+  border-bottom: 10px solid rgb(240,220,130);
+}
+
+.header-img-borders {
+  display: inline-block;
+  border: 1px solid #c7a97f;
+}
+
+#courtbotlogo {
+  height: 5em;
+  width: 15em;
+}
+
+#stateflag {
+  height: 10em;
+  width: 15em;
+}
+
+.app-links a {
+    background-color: rgb(240,220,130);
+    padding: 0.5em;
+    border-radius: 5px;
+    color: #000000;
+    display: inline-block;
+}

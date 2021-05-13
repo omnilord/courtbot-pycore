@@ -1,22 +1,37 @@
 {% macro with_errors(field) %}
-  <div class="form_field">
-  {% if field.errors %}
-    {% set css_class = 'has_error ' + kwargs.pop('class', '') %}
-    {{ field(class=css_class, **kwargs) }}
-    <ul class="errors">
-      {% for error in field.errors %}<li>{{ error|e }}</li>{% endfor %}
-    </ul>
-  {% else %}
-    {{ field(**kwargs) }}
-  {% endif %}
+  <div class="form-group">
+    {{ field.label.text|safe }}
+    {% if field.errors %}
+      {% set css_class = 'has_error ' + kwargs.pop('class', '') %}
+      {{ field(class=css_class, **kwargs) }}
+        {% for error in field.errors %}<div class="alert alert-danger p-0" role='alert'>
+          {{ error|e }}
+        </div>{% endfor %}
+    {% else %}
+      {{ field(**kwargs) }}
+    {% endif %}
   </div>
 {% endmacro %}
 
 {% macro build_form(state_code, form) -%}
 <form action="/{{state_code}}" method="post">
-  {% for field in form %}
-  {{ with_errors(field, style='font-weight: bold') }}
-  {% endfor %}
-  <button type="submit">Submit</button>
+  <div class="row justify-content-center app-links">
+    <div class="col-sm-6">
+    {% for field in form %}
+      {{ with_errors(field, style='font-weight: bold', class='form-control') }}
+    {% endfor %}
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{%- endmacro %}
+
+
+{% macro build_confirm_form(state_code, form) -%}
+<form action="/{{state_code}}" method="post">
+  <div class="row justify-content-center app-links">
+    <div class="col-sm-6">
+    {% for field in form %}
+      {{ with_errors(field, style='font-weight: bold', class='form-control') }}
+    {% endfor %}
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 {%- endmacro %}

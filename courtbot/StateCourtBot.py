@@ -1,33 +1,38 @@
 import jinja2, functools, os, re
 from flask import Blueprint, render_template
 from wtforms import Form, StringField, SelectField, validators, ValidationError
+from wtforms.widgets import HiddenInput
 
 
-def validate_cellphone(form, text):
-    _text = re.sub('[^\d]', '', text)
-    l = len(_text)
-    if l < 10 or l > 11 or (l == 11 and _text[0] != '1'):
+def validate_cellphone(form, field):
+    try:
+        text = re.sub('[^\d]', '', field.data)
+        l = len(text)
+        if l < 10 or l > 11 or (l == 11 and text[0] != '1'):
+            raise ValidationError('Invalid Cell Phone Number Provided.')
+    except TypeError:
         raise ValidationError('Invalid Cell Phone Number Provided.')
-    return _text
 
 
-def build_lookup_form(fields):
-    class L(Form): pass
+def build_optin_form(fields):
+    class L(Form):
+        def as_hidden(self):
+            for field in self:
+                field.widget = HiddenInput()
+            return self
+
     for name, options in fields.items():
         title, validation = options
         if isinstance(validation, list):
             setattr(L, name, SelectField(title, choices=validation))
+        elif callable(validation):
+            setattr(L, name, StringField(title, [validators.InputRequired(), validation]))
         # elif TODO: isinstance validation, any validators.* classes
         #    setattr(L, name, StringField(title, [validation]))
         else:
             setattr(L, name, StringField(title, [validators.InputRequired(), validators.Regexp(validation)]))
+    L.cellphone = StringField('Cell Phone Number <small>(ex: 302-555-0123)</small>', [validators.InputRequired(), validate_cellphone])
     return L
-
-
-def build_optin_form(L):
-    class O(L): pass
-    O.cellphone = StringField('Cell Phone Number', [validate_cellphone])
-    return O
 
 
 def setup_blueprint(state_code):
@@ -66,8 +71,11 @@ class StateCourtBot():
             raise ArgumentError('A minimum of one field is a required to identify cases.  Cellphone is handled automatically.')
 
         self.required_fields = fields
-        self.lookup_form = build_lookup_form(fields)
-        self.optin_form = build_optin_form(self.lookup_form)
+        self._optin_form = build_optin_form(fields)
+
+
+    def optin_form(self, data):
+        return self._optin_form(data)
 
 
     def get_case_callback(self, fn):

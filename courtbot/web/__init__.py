@@ -2,6 +2,8 @@ import os
 from flask import Flask, render_template, request
 from .. import CourtBotException, CourtBotMisconfigured, CourtBotUnknownState, get_states, get_state
 
+from flask import jsonify
+
 tpdir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'templates')
 app = Flask('CourtBot', template_folder=tpdir)
 
@@ -27,12 +29,12 @@ def favicon():
 @app.route('/<string:state_code>', methods=['GET', 'POST'])
 def state_index(state_code):
     statebot = get_state(app, state_code.upper())
-    form = statebot.lookup_form(request.form)
+    form = statebot.optin_form(request.form)
     error = None
     try:
         if request.method == 'POST' and form.validate():
             case = statebot.fetch_valid_case(form)
-            return statebot.render_case_info_page(case, form)
+            return statebot.render_case_info_page(case, form.as_hidden())
     except CourtBotException as err:
         error = err
     return statebot.render_lookup_page(form, error=error)

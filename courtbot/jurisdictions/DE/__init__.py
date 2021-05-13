@@ -4,7 +4,7 @@ import dsccs  # Delaware State Court Connect Scraper / Pending
 
 
 REQUIRED_FIELDS = {
-    'case_id': ('Case Number', re.compile('^(?P<court>w+)-(?P<year>\d{2})-(?P<case>\d+)$')),
+    'case_id': ('Case Number <small>(ex: JP13-20-567890)</small>', re.compile('^(?P<court>w+)-(?P<year>\d{2})-(?P<case>\d+)$')),
     # cellphone is automatically included
 }
 REMINDER_MESSAGE = '''Hello!  You're hearing is tomorrow at {when} and will be held at {location}; {judge} presiding.  Please remember to bring your id, and arrive early.'''

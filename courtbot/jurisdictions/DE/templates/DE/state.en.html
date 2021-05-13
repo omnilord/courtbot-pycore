@@ -1,180 +1,98 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Courtbot Delaware - Court Date Reminders Texted to Your Phone</title>
-<link rel="icon" href="data:,">
+{% extends 'layout.html' %}
+{% block title %}Delaware{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('DE.static', filename='DE/style.css') }}">
+{% endblock %}
+{% block navStateCode %}DE{% endblock %}
+courtbot/web/static/
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-
-<!-- local stylesheet, move to separate file -->
-<style type="text/css" media="all">
-.main-bkg {
-  background-color: rgb(118, 161, 160);
-  border-top: 10px solid rgb(240,220,130);
-  border-bottom: 10px solid rgb(240,220,130);
-}
-
-.header-img-borders {
-  display: inline-block;
-  border: 1px solid #c7a97f;
-}
-
-#courtbotlogo {
-  height: 5em;
-  width: 15em;
-}
-
-#stateflag {
-  height: 10em;
-  width: 15em;
-}
-
-.app-links a {
-    background-color: rgb(240,220,130);
-    padding: 0.5em;
-    border-radius: 5px;
-    color: #000000;
-    display: inline-block;
-}
-</style>
-
-<!-- TODO: oembeds -->
-
-</head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-      <a class="navbar-brand" href="#">
-        CourtBot DE
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#faq">FAQ</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <section id="home">
-    <div class="container">
-      <div class="jumbotron main-bkg">
-        <div class="container text-center">
-          <div class="row align-items-center">
-            <div class="col-sm-3">
-              <img src="http://court.bot/static/images/logo-no-border.png" alt="Delaware State Flag" id="courtbotlogo" class="align-self-center" />
-            </div>
-            <div class="col-sm-6">
-              <h1 class="display-5">Get Court Date Reminders</h1>
-              <h2 class="lead">Text your JP13 Case Number:</h2>
-              <div class="row justify-content-center">
-                <div class="col-sm-6 display-3"><a class="btn btn-lg btn-yellow" style="font-size:20px" href="#">(302) 555-0123</a></div>
+{% block content %}
+      <div class="container">
+        <div class="jumbotron main-bkg">
+          <div class="container text-center">
+            <div class="row align-items-center">
+              <div class="col-sm-3">
+                <img src="http://court.bot/static/images/logo-no-border.png" alt="Delaware State Flag" id="courtbotlogo" class="align-self-center" />
               </div>
-            </div>
-            <div class="col-sm-3">
-              <div class="header-img-borders row justify-content-center align-self-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c6/Flag_of_Delaware.svg" alt="Delaware State Flag" id="stateflag" />
-              </div>
-            </div>
-          </div>
-          <p class="my-sm-3">
-            Also available on:
-          </p>
-          <div class="row justify-content-center app-links">
-            <div class="col-sm-4">
-              <a href="#"><i class="fa fa-commenting fa-2x" aria-hidden="true"></i></a>
-              <br><em>SMS Texting</em>
-            </div>
-            <div class="col-sm-4">
-              <a href="#" target="_blank"><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i></a>
-              <br><em>Facebook Messenger</em>
-            </div>
-              <div class="col-sm-4">
-              <a href="#" target="_blank"><i class="fa fa-slack fa-2x" aria-hidden="true"></i></a>
-              <br><em>Slackbot</em>
-            </div>
-          </div>
-          <p class="my-sm-3">
-            Or fill out this form:
-          </p>
-          <form action="#" method="post">
-            <div class="row justify-content-center app-links">
               <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="case_num">Case Number <small>(ex: JP13-20-567890)</small></label>
-                  <input type="text" class="form-control" id="case_num" name="case_num" placeholder="JP13-20-567890" pattern="JP13-\d{2}-\d{6}" required="" value="JP13-">
+                <h1 class="display-5">Get Court Date Reminders</h1>
+                <h2 class="lead">Text your JP13 Case Number:</h2>
+                <div class="row justify-content-center">
+                  <div class="col-sm-6 display-3"><a class="btn btn-lg btn-yellow" style="font-size:20px" href="#">(302) 555-0123</a></div>
                 </div>
-                <div class="form-group">
-                  <label for="phone_num">Reminder Phone Number <small>(ex: 302-555-0123)</small></label>
-                  <input type="text" class="form-control" id="phone_num" name="phone_num" title="US formatted cellular number" placeholder="Enter Phone Number" pattern="^(\+?1-?)?\s*\(?\s*[0-9]{3}\s*\)?\s*-?\s*[0-9]{3}\s*-?\s*[0-9]{4}\s*$" minlength="10" maxlength="17" required="">
-                </div>
-                <div class="form-group">
-                  <small>Opt-in terms: by opting in you acknowledge and accept that you will receive 2 to 4 texts in the week prior to your court date and will be responsible for any charges generated.  Additional texts may be received if the court changes the scheduling on your case.</small>
-                </div>
-                <div class="form-group">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+              <div class="col-sm-3">
+                <div class="header-img-borders row justify-content-center align-self-center">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/c/c6/Flag_of_Delaware.svg" alt="Delaware State Flag" id="stateflag" />
                 </div>
               </div>
             </div>
-          </form>
+            <p class="my-sm-3">
+              Also available on:
+            </p>
+            <div class="row justify-content-center app-links">
+              <div class="col-sm-4">
+                <a href="#"><i class="fa fa-commenting fa-2x" aria-hidden="true"></i></a>
+                <br><em>SMS Texting</em>
+              </div>
+              <div class="col-sm-4">
+                <a href="#" target="_blank"><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i></a>
+                <br><em>Facebook Messenger</em>
+              </div>
+                <div class="col-sm-4">
+                <a href="#" target="_blank"><i class="fa fa-slack fa-2x" aria-hidden="true"></i></a>
+                <br><em>Slackbot</em>
+              </div>
+            </div>
+            <p class="my-sm-3">
+              Or fill out this form:
+            </p>
+{{ macros.build_form(statebot.state_code, form) }}
+            <p>
+            <small>Opt-in terms: by opting in you acknowledge and accept that you will receive 2 to 4 texts in the week prior to your court date and will be responsible for any charges generated.  Additional texts may be received if the court changes the scheduling on your case.</small>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+{% endblock %}
 
-  <section id="about">
-    <div class="container">
-      <div class="jumbotron">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-12">
-              <h1 class="display-5">About CourtBot DE</h1>
-              <p> Lorem Ipsum ... </p>
+{% block about %}
+      <div class="container">
+        <div class="jumbotron">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-12">
+                <h1 class="display-5">About CourtBot DE</h1>
+                <p> Lorem Ipsum ... </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+{% endblock %}
 
-  <section id="faq">
-    <div class="container">
-      <div class="jumbotron main-bkg">
-        <div class="container">
-          <div class="row">
-            <h1 class="display-5">FAQ</h1>
-            <dl class="list-group">
-              <dt>1. How do I find my JP13 Court Case Number?</dt>
-              <dd>If you've been served papers, you should have an ID that starts with "JP13", a dash, a two-digit year, another dash, and six digits.</dd>
-              <dt>2. What if I haven't been served papers?</dt>
-              <dd>You can search <a href="#">CourtConnect</a> for your name. Tip: use Case Type "61 - JP LANDLORD TENANT"</dd>
-              <dt>3. How is CourtBot DE associated with the state court system?</dt>
-              <dd>CourtBot Delaware is not affiliated with the Delaware Court systems and is a volunteer-provided pro-bona service created and maintained by Open Data Delaware, a Code for America Brigdae.</dd>
-              <dt>4. How will my information be secured?</dt>
-              <dd>First, we only capture data items relevant to your case schedule so we can send you a reminder.  Once your case is closed, we will irreversably obfuscate your cell number using a hash to prohibit using it further.</dd>
-              <dt>5. How do I unsubscribe?</dt>
-              <dd>Text "UNSUB" to the 302-555-0123 from the cell phone you want to unsubscribe.  If you've previously subscribed, you will receive confirmation of being removed.  You can also text OPTOUT to prevent your number from being added again in the future.</dd>
-              <dt>6. </dt>
-              <dd></dd>
-            </dl>
+{% block faq %}
+      <div class="container">
+        <div class="jumbotron main-bkg">
+          <div class="container">
+            <div class="row">
+              <h1 class="display-5">FAQ</h1>
+              <dl class="list-group">
+                <dt>1. How do I find my JP13 Court Case Number?</dt>
+                <dd>If you've been served papers, you should have an ID that starts with "JP13", a dash, a two-digit year, another dash, and six digits.</dd>
+                <dt>2. What if I haven't been served papers?</dt>
+                <dd>You can search <a href="#">CourtConnect</a> for your name. Tip: use Case Type "61 - JP LANDLORD TENANT"</dd>
+                <dt>3. How is CourtBot DE associated with the state court system?</dt>
+                <dd>CourtBot Delaware is not affiliated with the Delaware Court systems and is a volunteer-provided pro-bona service created and maintained by Open Data Delaware, a Code for America Brigdae.</dd>
+                <dt>4. How will my information be secured?</dt>
+                <dd>First, we only capture data items relevant to your case schedule so we can send you a reminder.  Once your case is closed, we will irreversably obfuscate your cell number using a hash to prohibit using it further.</dd>
+                <dt>5. How do I unsubscribe?</dt>
+                <dd>Text "UNSUB" to the 302-555-0123 from the cell phone you want to unsubscribe.  If you've previously subscribed, you will receive confirmation of being removed.  You can also text OPTOUT to prevent your number from being added again in the future.</dd>
+                <dt>6. </dt>
+                <dd></dd>
+              </dl>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-</body>
-</html>
+{% endblock %}
