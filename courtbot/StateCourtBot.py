@@ -23,14 +23,19 @@ def build_optin_form(fields):
 
     for name, options in fields.items():
         title, validation = options
-        if isinstance(validation, list):
+        vtype = type(validation)
+        if vtype is list:
             setattr(L, name, SelectField(title, choices=validation))
-        elif callable(validation):
-            setattr(L, name, StringField(title, [validators.InputRequired(), validation]))
-        # elif TODO: isinstance validation, any validators.* classes
-        #    setattr(L, name, StringField(title, [validation]))
         else:
-            setattr(L, name, StringField(title, [validators.InputRequired(), validators.Regexp(validation)]))
+            if vtype is tuple:
+                regex, message = validation
+                validator = validators.Regexp(regex, message=message)
+            elif callable(validation) or str(vtype).startswith('wtforms.validators.', 8):
+                validator = validation
+            elif vtype is re.Pattern or vtype is str:
+                validator = validators.Regexp(validation)
+            setattr(L, name, StringField(title, [validators.InputRequired(), validator]))
+
     L.cellphone = StringField('Cell Phone Number <small>(ex: 302-555-0123)</small>', [validators.InputRequired(), validate_cellphone])
     return L
 

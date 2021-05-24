@@ -5,7 +5,7 @@
       {% set css_class = 'has_error ' + kwargs.pop('class', '') %}
       {{ field(class=css_class, **kwargs) }}
         {% for error in field.errors %}<div class="alert alert-danger p-0" role='alert'>
-          {{ error|e }}
+          {{ error|safe }}
         </div>{% endfor %}
     {% else %}
       {{ field(**kwargs) }}
