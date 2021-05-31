@@ -33,7 +33,7 @@ def state_index(state_code):
     error = None
     try:
         if request.method == 'POST' and form.validate():
-            case = statebot.fetch_valid_case(form)
+            case = statebot.get_valid_case(form)
             return statebot.render_case_info_page(case, form.as_hidden())
     except CourtBotException as err:
         error = err

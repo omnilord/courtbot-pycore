@@ -32,7 +32,7 @@ def build_optin_form(fields):
                 validator = validators.Regexp(regex, message=message)
             elif callable(validation) or str(vtype).startswith('wtforms.validators.', 8):
                 validator = validation
-            elif vtype is re.Pattern or vtype is str:
+            elif vtype in [re.Pattern, str]:
                 validator = validators.Regexp(validation)
             setattr(L, name, StringField(title, [validators.InputRequired(), validator]))
 
@@ -116,6 +116,10 @@ class StateCourtBot():
         """
 
         return courtbot.CourtBotCase(**kwargs)
+
+    def get_valid_case(self, form):
+        case_fields = {field.name: field.data for field in form if field.name in self.required_fields.keys()}
+        return self.get_case(**case_fields)
 
 
     def render_lookup_page(self, form, lang='en', error=None):

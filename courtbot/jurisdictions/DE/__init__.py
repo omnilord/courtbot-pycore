@@ -1,4 +1,4 @@
-import re
+import re, os
 import courtbot
 import dsccs  # Delaware State Court Connect Scraper / Pending
 from wtforms import ValidationError
@@ -24,9 +24,12 @@ REMINDER_MESSAGE = '''Hello!  You're hearing is tomorrow at {when} and will be h
 
 bot = courtbot.state('DE', REQUIRED_FIELDS)
 
+#TODO: only cache in development
+dsccs.cache.directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', '..', '.cache')
+
 
 @bot.get_case_callback
-def delaware_get_case(self, case_id):
+def delaware_get_case(*, case_id):
     try:
         return dsccs.fetch_case(case_id)
     except dsccs.CourtConnectParseException as ex:
@@ -34,7 +37,7 @@ def delaware_get_case(self, case_id):
 
 
 @bot.registration_callback
-def delaware_registration_reminder(self, *, case_id, cellnumber):
+def delaware_registration_reminder(*, case_id, cellnumber):
     case = delaware_get_case(case_id)
     when = case.schedule[0].datetime
 
