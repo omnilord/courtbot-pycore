@@ -57,6 +57,7 @@ class StateCourtBot():
         self.state_name = state_name
         self.get_case = None
         self.register_reminder = None
+        self.cron = None
         self.blueprint = setup_blueprint(state_code)
         self.set_required_fields(fields)
 
@@ -101,6 +102,15 @@ class StateCourtBot():
         return fn
 
 
+    def cron_callback(self, fn):
+        """
+        Decorator for registering the cron callback for updating cases.
+        """
+
+        self.cron = fn
+        return fn
+
+
     def register_optin(self, form):
         """
         This is the callback from the raw request sending in
@@ -110,12 +120,33 @@ class StateCourtBot():
         pass
 
 
+    def run_cron(self, case):
+        """
+        This runs every night for every incomplete case to perform an update on the case
+        to ensure it does not text an invalid court date.  If the callback returns None,
+        then there is nothing to be done.  If the callback returns a Case instance, the
+        system will update the hearing date.
+
+        TODO: figure out if we should send an immediate text to the subscriber to let them
+        know their hearing date moved.  Perhaps there ought to be a "notify on updates"
+        checkbox in the UI that is checked here?
+        """
+
+        if self.cron is None:
+            return
+
+        if _case := self.cron(case):
+            # unless we get None back, the case was update, update the case information.
+            pass
+
+
     def new_case(self, **kwargs):
         """
         Indirect for construction of a CourtBotCase instance
         """
 
         return courtbot.CourtBotCase(**kwargs)
+
 
     def get_valid_case(self, form):
         case_fields = {field.name: field.data for field in form if field.name in self.required_fields.keys()}
@@ -132,11 +163,11 @@ class StateCourtBot():
                 case=case, form=form, error=error)
 
 
-    def render_optin_page(self, case, form, lang='en', error=None):
-        return render_template(f'{self.state_code}/optin.{lang}.html', statebot=self,
-                case=case, form=form, error=error)
-
-
     def render_confirmed_page(self, case, lang='en', error=None):
         return render_template(f'{self.state_code}/confirmed.{lang}.html', statebot=self,
                 case=case, error=error)
+
+
+    def render_failure_page(self, case, form, lang='en', error):
+        return render_template(f'{self.state_code}/failure.{lang}.html', statebot=self,
+                case=case, form=form, error=error)

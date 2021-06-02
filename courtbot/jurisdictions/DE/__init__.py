@@ -41,6 +41,9 @@ def delaware_registration_reminder(*, case_id, cellnumber):
     case = delaware_get_case(case_id)
     when = case.schedule[0].datetime
 
+    # TODO: what do we do when the docket indicates multiple hearings?
+    # TODO: clear the courtesy cache for this case
+
     # return the data required for courtbot transmission
     return self.new_case(
         case_id=case.id,
@@ -49,3 +52,10 @@ def delaware_registration_reminder(*, case_id, cellnumber):
         cellphone=cellphone,
         origination=case # Something for debugging / error tracing?
     )
+
+
+@bot.cron_callback
+def delaware_cron(*, case):
+    # TODO: fetch the case from dsccs, compare the courtdate to the saved courtdate
+    # TODO: what do we do when the docket indicates multiple hearings?
+    pass

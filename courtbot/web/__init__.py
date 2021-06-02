@@ -52,7 +52,7 @@ def state_optin(state_code):
             return statebot.render_confirmed_page(case)
     except CourtBotException as err:
         error = err
-    return statebot.render_optin_page(error=error)
+    return statebot.render_failure_page(error=error)
 
 
 @app.errorhandler(CourtBotMisconfigured)
