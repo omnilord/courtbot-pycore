@@ -1,16 +1,26 @@
 {% extends "layout.html" %}
 {% block title %} - Text Reminders{% endblock %}
 {% block content %}
-  Which state are in:
-  <select id="state">
-    <option selected disabled>Please Choose a state.</option>
-    {% for abbrv, state in states.items(): %}
-    <option value="{{ abbrv }}">{{ state }}</option>
-    {% else %}
-    <option disabled>No states are configured at this time.</option>
-    {% endfor %}
-  </select>
-  <button type="button" id="go_state" disabled="disabled">Go</button>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg text-center m-4">
+        Which state will your case be in:
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg text-center mb-5">
+        <select id="state">
+          <option selected disabled>Please Choose a state.</option>
+          {% for abbrv, state in states.items(): %}
+          <option value="{{ abbrv }}">{{ state }}</option>
+          {% else %}
+          <option disabled>No states are configured at this time.</option>
+          {% endfor %}
+        </select>
+        <button type="button" id="go_state" disabled="disabled">Go</button>
+      </div>
+    </div>
+  </div>
   <script>
     $(function () {
       var btn, state;

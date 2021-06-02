@@ -168,6 +168,6 @@ class StateCourtBot():
                 case=case, error=error)
 
 
-    def render_failure_page(self, case, form, lang='en', error):
+    def render_failure_page(self, case, form, error, lang='en'):
         return render_template(f'{self.state_code}/failure.{lang}.html', statebot=self,
                 case=case, form=form, error=error)
