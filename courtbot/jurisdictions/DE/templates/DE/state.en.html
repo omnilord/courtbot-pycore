@@ -1,10 +1,4 @@
-{% extends 'layout.html' %}
-{% block title %}Delaware{% endblock %}
-{% block head %}
-    <link rel="stylesheet" href="{{ url_for('DE.static', filename='DE/style.css') }}">
-{% endblock %}
-{% block navStateCode %}DE{% endblock %}
-
+{% extends 'DE/layout.en.html' %}
 {% block content %}
       <div class="container">
         <div class="jumbotron main-bkg">
@@ -46,51 +40,12 @@
             <p class="my-sm-3">
               Or fill out this form:
             </p>
+            <div class="border border-dark p-2">
 {{ macros.build_form(statebot.state_code, form) }}
+            </div>
             <p>
-            <small>Opt-in terms: by opting in you acknowledge and accept that you will receive 2 to 4 texts in the week prior to your court date and will be responsible for any charges generated.  Additional texts may be received if the court changes the scheduling on your case.</small>
+              <small>Opt-in terms: by opting in you acknowledge and accept that you will receive 2 to 4 texts in the week prior to your court date and will be responsible for any charges generated.  Additional texts may be received if the court changes the scheduling on your case.</small>
             </p>
-          </div>
-        </div>
-      </div>
-{% endblock %}
-
-{% block about %}
-      <div class="container">
-        <div class="jumbotron">
-          <div class="container">
-            <div class="row">
-              <div class="col-sm-12">
-                <h1 class="display-5">About CourtBot DE</h1>
-                <p> Lorem Ipsum ... </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-{% endblock %}
-
-{% block faq %}
-      <div class="container">
-        <div class="jumbotron main-bkg">
-          <div class="container">
-            <div class="row">
-              <h1 class="display-5">FAQ</h1>
-              <dl class="list-group">
-                <dt>1. How do I find my JP13 Court Case Number?</dt>
-                <dd>If you've been served papers, you should have an ID that starts with "JP13", a dash, a two-digit year, another dash, and six digits.</dd>
-                <dt>2. What if I haven't been served papers?</dt>
-                <dd>You can search <a href="#">CourtConnect</a> for your name. Tip: use Case Type "61 - JP LANDLORD TENANT"</dd>
-                <dt>3. How is CourtBot DE associated with the state court system?</dt>
-                <dd>CourtBot Delaware is not affiliated with the Delaware Court systems and is a volunteer-provided pro-bona service created and maintained by Open Data Delaware, a Code for America Brigdae.</dd>
-                <dt>4. How will my information be secured?</dt>
-                <dd>First, we only capture data items relevant to your case schedule so we can send you a reminder.  Once your case is closed, we will irreversably obfuscate your cell number using a hash to prohibit using it further.</dd>
-                <dt>5. How do I unsubscribe?</dt>
-                <dd>Text "UNSUB" to the 302-555-0123 from the cell phone you want to unsubscribe.  If you've previously subscribed, you will receive confirmation of being removed.  You can also text OPTOUT to prevent your number from being added again in the future.</dd>
-                <dt>6. </dt>
-                <dd></dd>
-              </dl>
-            </div>
           </div>
         </div>
       </div>
