@@ -25,7 +25,7 @@ setup(
     #install_requires=requirements,
     packages=find_packages(),
     license='LICENSE.txt',
-    python_requires='>=3.8',
+    python_requires='>=3.9',
     scripts=[],
     url='http://pypi.python.org/pypi/courtbot-pycore/',
 )
